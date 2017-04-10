@@ -1,0 +1,185 @@
+var _magnedavidsen$hmm$Main$postBooks = A3(
+	_elm_lang$http$Http$post,
+	'http://localhost:3000/vote',
+	_elm_lang$http$Http$emptyBody,
+	_elm_lang$core$Json_Decode$list(_elm_lang$core$Json_Decode$string));
+var _magnedavidsen$hmm$Main$server = 'ws://localhost:3000';
+var _magnedavidsen$hmm$Main$counterEndpoint = A2(_elm_lang$core$Basics_ops['++'], _magnedavidsen$hmm$Main$server, '/counter');
+var _magnedavidsen$hmm$Main$Turban = F3(
+	function (a, b, c) {
+		return {id: a, votes: b, name: c};
+	});
+var _magnedavidsen$hmm$Main$turbanDecoder = A4(
+	_elm_lang$core$Json_Decode$map3,
+	_magnedavidsen$hmm$Main$Turban,
+	A2(_elm_lang$core$Json_Decode$field, 'id', _elm_lang$core$Json_Decode$string),
+	A2(_elm_lang$core$Json_Decode$field, 'votes', _elm_lang$core$Json_Decode$int),
+	A2(_elm_lang$core$Json_Decode$field, 'name', _elm_lang$core$Json_Decode$string));
+var _magnedavidsen$hmm$Main$decodeTurbans = function (payload) {
+	var _p0 = A2(
+		_elm_lang$core$Json_Decode$decodeString,
+		_elm_lang$core$Json_Decode$list(_magnedavidsen$hmm$Main$turbanDecoder),
+		payload);
+	if (_p0.ctor === 'Ok') {
+		return _p0._0;
+	} else {
+		return {ctor: '[]'};
+	}
+};
+var _magnedavidsen$hmm$Main$Model = function (a) {
+	return {turbans: a};
+};
+var _magnedavidsen$hmm$Main$init = {
+	ctor: '_Tuple2',
+	_0: _magnedavidsen$hmm$Main$Model(
+		{
+			ctor: '::',
+			_0: {id: '1', votes: 0, name: 'yeah1'},
+			_1: {
+				ctor: '::',
+				_0: {id: '2', votes: 0, name: 'yeah2'},
+				_1: {
+					ctor: '::',
+					_0: {id: '3', votes: 0, name: 'yeah3'},
+					_1: {ctor: '[]'}
+				}
+			}
+		}),
+	_1: _elm_lang$core$Platform_Cmd$none
+};
+var _magnedavidsen$hmm$Main$Turbans = function (a) {
+	return {ctor: 'Turbans', _0: a};
+};
+var _magnedavidsen$hmm$Main$subscriptions = function (model) {
+	return A2(_elm_lang$websocket$WebSocket$listen, _magnedavidsen$hmm$Main$counterEndpoint, _magnedavidsen$hmm$Main$Turbans);
+};
+var _magnedavidsen$hmm$Main$PostVote = function (a) {
+	return {ctor: 'PostVote', _0: a};
+};
+var _magnedavidsen$hmm$Main$postVote = function (id) {
+	var url = A2(_elm_lang$core$Basics_ops['++'], 'http://localhost:3000/vote/', id);
+	return A2(
+		_elm_lang$http$Http$send,
+		_magnedavidsen$hmm$Main$PostVote,
+		A3(_elm_lang$http$Http$post, url, _elm_lang$http$Http$emptyBody, _elm_lang$core$Json_Decode$string));
+};
+var _magnedavidsen$hmm$Main$update = F2(
+	function (msg, model) {
+		var _p1 = msg;
+		switch (_p1.ctor) {
+			case 'Turbans':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{
+							turbans: _magnedavidsen$hmm$Main$decodeTurbans(_p1._0)
+						}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'PostVote':
+				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+			case 'Dummy':
+				return {
+					ctor: '_Tuple2',
+					_0: model,
+					_1: _magnedavidsen$hmm$Main$postVote(_p1._0)
+				};
+			default:
+				var updateVote = function (t) {
+					return _elm_lang$core$Native_Utils.eq(t.id, _p1._0) ? _elm_lang$core$Native_Utils.update(
+						t,
+						{votes: t.votes + 1}) : t;
+				};
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{
+							turbans: A2(_elm_lang$core$List$map, updateVote, model.turbans)
+						}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+		}
+	});
+var _magnedavidsen$hmm$Main$Dummy = function (a) {
+	return {ctor: 'Dummy', _0: a};
+};
+var _magnedavidsen$hmm$Main$viewTurban = function (turban) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$span,
+				{ctor: '[]'},
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html$text(turban.name),
+					_1: {ctor: '[]'}
+				}),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$span,
+					{ctor: '[]'},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text(' - '),
+						_1: {ctor: '[]'}
+					}),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$span,
+						{ctor: '[]'},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text(
+								_elm_lang$core$Basics$toString(turban.votes)),
+							_1: {ctor: '[]'}
+						}),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$span,
+							{ctor: '[]'},
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html$text(' - '),
+								_1: {ctor: '[]'}
+							}),
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$button,
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html_Events$onClick(
+										_magnedavidsen$hmm$Main$Dummy(turban.id)),
+									_1: {ctor: '[]'}
+								},
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html$text(turban.name),
+									_1: {ctor: '[]'}
+								}),
+							_1: {ctor: '[]'}
+						}
+					}
+				}
+			}
+		});
+};
+var _magnedavidsen$hmm$Main$view = function (model) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{ctor: '[]'},
+		A2(_elm_lang$core$List$map, _magnedavidsen$hmm$Main$viewTurban, model.turbans));
+};
+var _magnedavidsen$hmm$Main$main = _elm_lang$html$Html$program(
+	{init: _magnedavidsen$hmm$Main$init, view: _magnedavidsen$hmm$Main$view, update: _magnedavidsen$hmm$Main$update, subscriptions: _magnedavidsen$hmm$Main$subscriptions})();
+var _magnedavidsen$hmm$Main$Vote = function (a) {
+	return {ctor: 'Vote', _0: a};
+};
