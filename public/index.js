@@ -9222,7 +9222,7 @@ var _elm_lang$websocket$WebSocket$onSelfMsg = F3(
 	});
 _elm_lang$core$Native_Platform.effectManagers['WebSocket'] = {pkg: 'elm-lang/websocket', init: _elm_lang$websocket$WebSocket$init, onEffects: _elm_lang$websocket$WebSocket$onEffects, onSelfMsg: _elm_lang$websocket$WebSocket$onSelfMsg, tag: 'fx', cmdMap: _elm_lang$websocket$WebSocket$cmdMap, subMap: _elm_lang$websocket$WebSocket$subMap};
 
-var _magnedavidsen$hmm$Main$counterEndpoint = 'wss://turbanvote.herokapp.com/counter';
+var _magnedavidsen$hmm$Main$counterEndpoint = 'wss://turbanvote.herokuapp.com/counter';
 var _magnedavidsen$hmm$Main$postVote = function (id) {
 	return A2(_elm_lang$websocket$WebSocket$send, _magnedavidsen$hmm$Main$counterEndpoint, id);
 };
