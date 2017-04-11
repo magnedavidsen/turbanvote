@@ -9,7 +9,7 @@ import Json.Decode exposing (Decoder, int, string, map3 , field, decodeString, l
 
 counterEndpoint : String
 counterEndpoint =
-  "wss://turbanvote.herokapp.com/counter"
+  "wss://turbanvote.herokuapp.com/counter"
 
 main =
   Html.program
