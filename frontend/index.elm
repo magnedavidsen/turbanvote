@@ -23,7 +23,7 @@ type alias Turban =
 
 server : String
 server =
-  "ws://localhost:3000"
+  "wss://localhost:3000"
 
 voteEndpoint : String
 voteEndpoint =
