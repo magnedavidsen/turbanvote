@@ -1,34 +1,36 @@
 const express = require('express');
 const app = express();
 const expressWs = require('express-ws')(app);
+const pool = require('./db');
 
-let turbans = [{"id": "1", "votes": 0, "name": "hmm"}, {"id": "2", "votes": 0, "name": "hmm"}, {"id": "3", "votes": 0, "name": "hmm"}];
+let turbans = [];
 const port = process.env.PORT || 3000;
-
 
 app.use(express.static('public'));
 
 app.ws('/counter', function(ws, req) {
-
     ws.on('message', function(msg) {
-        const xfor = req.get('x-forwarded-for');
-        console.log(req.headers);
-        console.log(xfor);
-        const nuturb = turbans.map(turban => {
-            if(turban.id === msg) {
-                turban.votes = turban.votes + 1;
-            }
+        const xfor = req.get('x-forwarded-for') || "No IP";
+        pool.query('INSERT INTO votes (turban, ip) VALUES ($1, $2)', [msg, xfor]);
+
+        turbans = turbans.map(turban => {
+            if(turban.id === msg) turban.count = turban.count + 1;
             return turban;
         });
-        turbans = nuturb;
     });
 
     function f() {
         const countObj = JSON.stringify(turbans);
         ws.send(countObj, (error) => console.log("Web socket send error: " + error));
-        setTimeout( f, 3000 );
+        setTimeout( f, 2000 );
     }
     f();
 });
 
-app.listen(port);
+pool.query('select turbans.id, turbans.name, count(*)::int from turbans left join votes on votes.turban = turbans.id group by turbans.id')
+  .then(function(res) {
+      turbans = res.rows;
+      app.listen(port, function() {
+          console.log('server is listening on ' + port)
+      });
+});

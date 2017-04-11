@@ -9222,7 +9222,7 @@ var _elm_lang$websocket$WebSocket$onSelfMsg = F3(
 	});
 _elm_lang$core$Native_Platform.effectManagers['WebSocket'] = {pkg: 'elm-lang/websocket', init: _elm_lang$websocket$WebSocket$init, onEffects: _elm_lang$websocket$WebSocket$onEffects, onSelfMsg: _elm_lang$websocket$WebSocket$onSelfMsg, tag: 'fx', cmdMap: _elm_lang$websocket$WebSocket$cmdMap, subMap: _elm_lang$websocket$WebSocket$subMap};
 
-var _magnedavidsen$hmm$Main$counterEndpoint = 'wss://turbanvote.herokuapp.com/counter';
+var _magnedavidsen$hmm$Main$counterEndpoint = 'ws://localhost:3000/counter';
 var _magnedavidsen$hmm$Main$postVote = function (id) {
 	return A2(_elm_lang$websocket$WebSocket$send, _magnedavidsen$hmm$Main$counterEndpoint, id);
 };
@@ -9250,13 +9250,13 @@ var _magnedavidsen$hmm$Main$doload = _elm_lang$core$Native_Platform.outgoingPort
 	});
 var _magnedavidsen$hmm$Main$Turban = F3(
 	function (a, b, c) {
-		return {id: a, votes: b, name: c};
+		return {id: a, count: b, name: c};
 	});
 var _magnedavidsen$hmm$Main$turbanDecoder = A4(
 	_elm_lang$core$Json_Decode$map3,
 	_magnedavidsen$hmm$Main$Turban,
 	A2(_elm_lang$core$Json_Decode$field, 'id', _elm_lang$core$Json_Decode$string),
-	A2(_elm_lang$core$Json_Decode$field, 'votes', _elm_lang$core$Json_Decode$int),
+	A2(_elm_lang$core$Json_Decode$field, 'count', _elm_lang$core$Json_Decode$int),
 	A2(_elm_lang$core$Json_Decode$field, 'name', _elm_lang$core$Json_Decode$string));
 var _magnedavidsen$hmm$Main$decodeTurbans = function (payload) {
 	var _p0 = A2(
@@ -9316,7 +9316,7 @@ var _magnedavidsen$hmm$Main$update = F2(
 				var updateVote = function (t) {
 					return _elm_lang$core$Native_Utils.eq(t.id, _p3) ? _elm_lang$core$Native_Utils.update(
 						t,
-						{votes: t.votes + 1}) : t;
+						{count: t.count + 1}) : t;
 				};
 				return {
 					ctor: '_Tuple2',
@@ -9406,7 +9406,7 @@ var _magnedavidsen$hmm$Main$viewTurban = function (turban) {
 						{
 							ctor: '::',
 							_0: _elm_lang$html$Html$text(
-								_elm_lang$core$Basics$toString(turban.votes)),
+								_elm_lang$core$Basics$toString(turban.count)),
 							_1: {ctor: '[]'}
 						}),
 					_1: {
@@ -9453,24 +9453,9 @@ var _magnedavidsen$hmm$Main$view = function (model) {
 				A2(_elm_lang$core$List$map, _magnedavidsen$hmm$Main$viewTurban, model.turbans)),
 			_1: {
 				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html$button,
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html_Events$onClick(_magnedavidsen$hmm$Main$Doload),
-						_1: {ctor: '[]'}
-					},
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html$text('load'),
-						_1: {ctor: '[]'}
-					}),
-				_1: {
-					ctor: '::',
-					_0: _elm_lang$html$Html$text(
-						_elm_lang$core$Basics$toString(model.alreadyVoted)),
-					_1: {ctor: '[]'}
-				}
+				_0: _elm_lang$html$Html$text(
+					_elm_lang$core$Basics$toString(model.alreadyVoted)),
+				_1: {ctor: '[]'}
 			}
 		});
 };

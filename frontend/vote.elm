@@ -9,7 +9,7 @@ import Json.Decode exposing (Decoder, int, string, map3 , field, decodeString, l
 
 counterEndpoint : String
 counterEndpoint =
-  "wss://turbanvote.herokuapp.com/counter"
+  "ws://localhost:3000/counter"
 
 main =
   Html.program
@@ -29,7 +29,7 @@ subscriptions model =
 
 type alias Turban =
     { id : String
-    , votes : Int
+    , count : Int
     , name : String
     }
 
@@ -43,7 +43,7 @@ turbanDecoder : Decoder Turban
 turbanDecoder =
     map3 Turban
       (field "id" string)
-      (field "votes" int)
+      (field "count" int)
       (field "name" string)
 
 decodeTurbans : String -> List Turban
@@ -80,7 +80,7 @@ update msg model =
       let
         updateVote t =
           if t.id == id then
-            { t | votes = t.votes + 1 }
+            { t | count = t.count + 1 }
           else
             t
           in
@@ -93,7 +93,6 @@ view : Model -> Html Msg
 view model =
   div []
     [ div [] (List.map viewTurban model.turbans)
-    , button [onClick (Doload)] [text "load"]
     , text (toString model.alreadyVoted)]
 
 viewTurban : Turban -> Html Msg
@@ -101,7 +100,7 @@ viewTurban turban =
   div []
     [ span [] [ text turban.name ]
     , span [] [ text " - "]
-    , span [] [ text (toString turban.votes) ]
+    , span [] [ text (toString turban.count) ]
     , span [] [ text " - "]
     , button [onClick (Vote turban.id)] [text turban.name]
     ]
