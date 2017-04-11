@@ -125,7 +125,7 @@ view model =
       , div [class "name"] [ text turban.name ]
       , div [] [ text ("Antall stemmer: " ++ (toString turban.count)) ]
       , div [] [ text (((toString (percentageOfVotes turban.count model))) ++ "% av stemmene") ]
-      
+
       , button [onClick (Vote turban.id)] [text "STEM"]
       ])  model.turbans)
-    , text (alreadyVotedText model.alreadyVoted)]
+    , footer [] [text (alreadyVotedText model.alreadyVoted)]]

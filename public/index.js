@@ -9864,8 +9864,15 @@ var _magnedavidsen$hmm$Main$view = function (model) {
 					model.turbans)),
 			_1: {
 				ctor: '::',
-				_0: _elm_lang$html$Html$text(
-					_magnedavidsen$hmm$Main$alreadyVotedText(model.alreadyVoted)),
+				_0: A2(
+					_elm_lang$html$Html$footer,
+					{ctor: '[]'},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text(
+							_magnedavidsen$hmm$Main$alreadyVotedText(model.alreadyVoted)),
+						_1: {ctor: '[]'}
+					}),
 				_1: {ctor: '[]'}
 			}
 		});
