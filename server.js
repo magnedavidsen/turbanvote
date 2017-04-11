@@ -3,6 +3,8 @@ const app = express();
 const expressWs = require('express-ws')(app);
 
 let turbans = [{"id": "1", "votes": 0, "name": "hmm"}, {"id": "2", "votes": 0, "name": "hmm"}, {"id": "3", "votes": 0, "name": "hmm"}];
+const port = process.env.PORT || 3000;
+
 
 app.use(express.static('public'));
 
@@ -29,4 +31,4 @@ app.ws('/counter', function(ws, req) {
     f();
 });
 
-app.listen(3000);
+app.listen(port);
