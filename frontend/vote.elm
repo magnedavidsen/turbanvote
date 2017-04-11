@@ -1,3 +1,5 @@
+port module Main exposing (..)
+
 import Html exposing (..)
 import Html.Events exposing (..)
 import WebSocket
@@ -5,18 +7,9 @@ import WebSocket
 import Http
 import Json.Decode exposing (Decoder, int, string, map3 , field, decodeString, list, decodeValue)
 
-server : String
-server =
-  "ws://localhost:3000"
-
 counterEndpoint : String
 counterEndpoint =
-  server ++ "/counter"
-
-postBooks : Http.Request (List String)
-postBooks =
-  Http.post "http://localhost:3000/vote" Http.emptyBody (list string)
-
+  "ws://localhost:3000/counter"
 
 main =
   Html.program
@@ -26,10 +19,11 @@ main =
     , subscriptions = subscriptions
     }
 
-
 subscriptions : Model -> Sub Msg
 subscriptions model =
-  WebSocket.listen counterEndpoint Turbans
+    Sub.batch
+        [ WebSocket.listen counterEndpoint ReceiveTurbans
+        , load Load ]
 
 -- MODEL
 
@@ -39,12 +33,11 @@ type alias Turban =
     , name : String
     }
 
-type alias Model = { turbans : List Turban }
-
+type alias Model = { turbans : List Turban, alreadyVoted : Bool }
 
 init : (Model, Cmd Msg)
 init =
-  (Model [{id = "1", votes = 0, name = "yeah1"}, {id = "2", votes = 0, name = "yeah2"}, {id = "3", votes = 0, name = "yeah3"}], Cmd.none)
+  (Model [] False, doload())
 
 turbanDecoder : Decoder Turban
 turbanDecoder =
@@ -62,25 +55,27 @@ decodeTurbans payload =
 
 -- UPDATE
 
+port save : String -> Cmd msg
+port load : (Maybe String -> msg) -> Sub msg
+port doload : () -> Cmd msg
+
 postVote : String -> Cmd Msg
 postVote id =
-  let
-    url =
-      "http://localhost:3000/vote/" ++ id
-  in
-    Http.send PostVote (Http.post url Http.emptyBody string)
+  WebSocket.send counterEndpoint id
 
-type Msg = Vote String | Dummy String | PostVote (Result Http.Error String) | Turbans String
+type Msg = Vote String | ReceiveTurbans String | Doload | Load (Maybe String)
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
   case msg of
-    Turbans str ->
+    ReceiveTurbans str ->
       ({model | turbans = decodeTurbans str}, Cmd.none)
-    PostVote _ ->
-      (model, Cmd.none)
-    Dummy id ->
-      (model, postVote id)
+    Doload ->
+      ( model, doload() )
+    Load value ->
+      case value of
+        Just xs -> ({model | alreadyVoted = not (String.isEmpty xs)}, Cmd.none )
+        Nothing -> ({model | alreadyVoted = False}, Cmd.none )
     Vote id ->
       let
         updateVote t =
@@ -89,13 +84,17 @@ update msg model =
           else
             t
           in
-            ({ model | turbans = List.map updateVote model.turbans }, Cmd.none)
+            ({ model | turbans = List.map updateVote model.turbans, alreadyVoted = True },
+            Cmd.batch [save "True", postVote id])
 
 -- VIEW
 
 view : Model -> Html Msg
 view model =
-    div [] (List.map viewTurban model.turbans)
+  div []
+    [ div [] (List.map viewTurban model.turbans)
+    , button [onClick (Doload)] [text "load"]
+    , text (toString model.alreadyVoted)]
 
 viewTurban : Turban -> Html Msg
 viewTurban turban =
@@ -104,5 +103,5 @@ viewTurban turban =
     , span [] [ text " - "]
     , span [] [ text (toString turban.votes) ]
     , span [] [ text " - "]
-    , button [onClick (Dummy turban.id)] [text turban.name]
+    , button [onClick (Vote turban.id)] [text turban.name]
     ]
