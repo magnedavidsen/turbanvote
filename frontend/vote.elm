@@ -2,6 +2,7 @@ port module Main exposing (..)
 
 import Html exposing (..)
 import Html.Events exposing (..)
+import Html.Attributes exposing (..)
 import WebSocket
 
 import Http
@@ -48,7 +49,7 @@ turbanDecoder =
 
 decodeTurbans : String -> List Turban
 decodeTurbans payload =
-  case decodeString (list turbanDecoder) payload of
+  case decodeString (Json.Decode.list turbanDecoder) payload of
     Ok val -> val
     Err message -> []
 
@@ -89,18 +90,24 @@ update msg model =
 
 -- VIEW
 
+alreadyVotedText alreadyVoted =
+  if alreadyVoted then
+    "Takk for stemmen!"
+  else
+    "Stem da mann/kvinne!"
+
 view : Model -> Html Msg
 view model =
-  div []
-    [ div [] (List.map viewTurban model.turbans)
-    , text (toString model.alreadyVoted)]
+  div [class "container"]
+    [ section [] (List.map viewTurban model.turbans)
+    , text (alreadyVotedText model.alreadyVoted)]
 
 viewTurban : Turban -> Html Msg
 viewTurban turban =
-  div []
-    [ span [] [ text turban.name ]
-    , span [] [ text " - "]
-    , span [] [ text (toString turban.count) ]
-    , span [] [ text " - "]
-    , button [onClick (Vote turban.id)] [text turban.name]
+  article []
+    [ img [src "https://scontent-arn2-1.xx.fbcdn.net/v/t1.0-9/17457714_10154631752074514_1853965134717809529_n.jpg?oh=d8229e93432033b6b90f4a25f13b5d72&oe=594FCF0F"] []
+    , div [class "name"] [ text turban.name ]
+    , div [] [ text ("Antall stemmer: " ++ (toString turban.count)) ]
+    , div [] [ text ((toString turban.count)) ]
+    , button [onClick (Vote turban.id)] [text "STEM"]
     ]
