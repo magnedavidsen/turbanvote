@@ -9572,10 +9572,50 @@ var _elm_lang$websocket$WebSocket$onSelfMsg = F3(
 	});
 _elm_lang$core$Native_Platform.effectManagers['WebSocket'] = {pkg: 'elm-lang/websocket', init: _elm_lang$websocket$WebSocket$init, onEffects: _elm_lang$websocket$WebSocket$onEffects, onSelfMsg: _elm_lang$websocket$WebSocket$onSelfMsg, tag: 'fx', cmdMap: _elm_lang$websocket$WebSocket$cmdMap, subMap: _elm_lang$websocket$WebSocket$subMap};
 
+var _magnedavidsen$hmm$Main$myStyle = function (width) {
+	return _elm_lang$html$Html_Attributes$style(
+		{
+			ctor: '::',
+			_0: {ctor: '_Tuple2', _0: 'backgroundColor', _1: 'green'},
+			_1: {
+				ctor: '::',
+				_0: {ctor: '_Tuple2', _0: 'height', _1: '1.5em'},
+				_1: {
+					ctor: '::',
+					_0: {ctor: '_Tuple2', _0: 'margin', _1: '0.2em 1em'},
+					_1: {
+						ctor: '::',
+						_0: {
+							ctor: '_Tuple2',
+							_0: 'width',
+							_1: A2(
+								_elm_lang$core$Basics_ops['++'],
+								_elm_lang$core$Basics$toString(width),
+								'%')
+						},
+						_1: {ctor: '[]'}
+					}
+				}
+			}
+		});
+};
+var _magnedavidsen$hmm$Main$sumOfVotes = function (turbanlist) {
+	var getCount = function (turban) {
+		return turban.count;
+	};
+	return _elm_lang$core$List$sum(
+		A2(_elm_lang$core$List$map, getCount, turbanlist));
+};
+var _magnedavidsen$hmm$Main$percentageOfVotes = F2(
+	function (votes, model) {
+		return _elm_lang$core$Basics$round(
+			(_elm_lang$core$Basics$toFloat(votes) / _elm_lang$core$Basics$toFloat(
+				_magnedavidsen$hmm$Main$sumOfVotes(model.turbans))) * 100);
+	});
 var _magnedavidsen$hmm$Main$alreadyVotedText = function (alreadyVoted) {
 	return alreadyVoted ? 'Takk for stemmen!' : 'Stem da mann/kvinne!';
 };
-var _magnedavidsen$hmm$Main$counterEndpoint = 'ws://localhost:3000/counter';
+var _magnedavidsen$hmm$Main$counterEndpoint = 'wss://turbanvote.herokuapp.com/counter';
 var _magnedavidsen$hmm$Main$postVote = function (id) {
 	return A2(_elm_lang$websocket$WebSocket$send, _magnedavidsen$hmm$Main$counterEndpoint, id);
 };
@@ -9727,69 +9767,6 @@ var _magnedavidsen$hmm$Main$subscriptions = function (model) {
 var _magnedavidsen$hmm$Main$Vote = function (a) {
 	return {ctor: 'Vote', _0: a};
 };
-var _magnedavidsen$hmm$Main$viewTurban = function (turban) {
-	return A2(
-		_elm_lang$html$Html$article,
-		{ctor: '[]'},
-		{
-			ctor: '::',
-			_0: A2(
-				_elm_lang$html$Html$img,
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$src('https://scontent-arn2-1.xx.fbcdn.net/v/t1.0-9/17457714_10154631752074514_1853965134717809529_n.jpg?oh=d8229e93432033b6b90f4a25f13b5d72&oe=594FCF0F'),
-					_1: {ctor: '[]'}
-				},
-				{ctor: '[]'}),
-			_1: {
-				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html$div,
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$class('name'),
-						_1: {ctor: '[]'}
-					},
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html$text(turban.name),
-						_1: {ctor: '[]'}
-					}),
-				_1: {
-					ctor: '::',
-					_0: A2(
-						_elm_lang$html$Html$div,
-						{ctor: '[]'},
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html$text(
-								A2(
-									_elm_lang$core$Basics_ops['++'],
-									'Antall stemmer: ',
-									_elm_lang$core$Basics$toString(turban.count))),
-							_1: {ctor: '[]'}
-						}),
-					_1: {
-						ctor: '::',
-						_0: A2(
-							_elm_lang$html$Html$button,
-							{
-								ctor: '::',
-								_0: _elm_lang$html$Html_Events$onClick(
-									_magnedavidsen$hmm$Main$Vote(turban.id)),
-								_1: {ctor: '[]'}
-							},
-							{
-								ctor: '::',
-								_0: _elm_lang$html$Html$text('STEM'),
-								_1: {ctor: '[]'}
-							}),
-						_1: {ctor: '[]'}
-					}
-				}
-			}
-		});
-};
 var _magnedavidsen$hmm$Main$view = function (model) {
 	return A2(
 		_elm_lang$html$Html$div,
@@ -9803,7 +9780,88 @@ var _magnedavidsen$hmm$Main$view = function (model) {
 			_0: A2(
 				_elm_lang$html$Html$section,
 				{ctor: '[]'},
-				A2(_elm_lang$core$List$map, _magnedavidsen$hmm$Main$viewTurban, model.turbans)),
+				A2(
+					_elm_lang$core$List$map,
+					function (turban) {
+						return A2(
+							_elm_lang$html$Html$article,
+							{ctor: '[]'},
+							{
+								ctor: '::',
+								_0: A2(
+									_elm_lang$html$Html$img,
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html_Attributes$src('https://scontent-arn2-1.xx.fbcdn.net/v/t1.0-9/17457714_10154631752074514_1853965134717809529_n.jpg?oh=d8229e93432033b6b90f4a25f13b5d72&oe=594FCF0F'),
+										_1: {ctor: '[]'}
+									},
+									{ctor: '[]'}),
+								_1: {
+									ctor: '::',
+									_0: A2(
+										_elm_lang$html$Html$div,
+										{
+											ctor: '::',
+											_0: _elm_lang$html$Html_Attributes$class('name'),
+											_1: {ctor: '[]'}
+										},
+										{
+											ctor: '::',
+											_0: _elm_lang$html$Html$text(turban.name),
+											_1: {ctor: '[]'}
+										}),
+									_1: {
+										ctor: '::',
+										_0: A2(
+											_elm_lang$html$Html$div,
+											{ctor: '[]'},
+											{
+												ctor: '::',
+												_0: _elm_lang$html$Html$text(
+													A2(
+														_elm_lang$core$Basics_ops['++'],
+														'Antall stemmer: ',
+														_elm_lang$core$Basics$toString(turban.count))),
+												_1: {ctor: '[]'}
+											}),
+										_1: {
+											ctor: '::',
+											_0: A2(
+												_elm_lang$html$Html$div,
+												{ctor: '[]'},
+												{
+													ctor: '::',
+													_0: _elm_lang$html$Html$text(
+														A2(
+															_elm_lang$core$Basics_ops['++'],
+															_elm_lang$core$Basics$toString(
+																A2(_magnedavidsen$hmm$Main$percentageOfVotes, turban.count, model)),
+															'% av stemmene')),
+													_1: {ctor: '[]'}
+												}),
+											_1: {
+												ctor: '::',
+												_0: A2(
+													_elm_lang$html$Html$button,
+													{
+														ctor: '::',
+														_0: _elm_lang$html$Html_Events$onClick(
+															_magnedavidsen$hmm$Main$Vote(turban.id)),
+														_1: {ctor: '[]'}
+													},
+													{
+														ctor: '::',
+														_0: _elm_lang$html$Html$text('STEM'),
+														_1: {ctor: '[]'}
+													}),
+												_1: {ctor: '[]'}
+											}
+										}
+									}
+								}
+							});
+					},
+					model.turbans)),
 			_1: {
 				ctor: '::',
 				_0: _elm_lang$html$Html$text(

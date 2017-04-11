@@ -89,25 +89,43 @@ update msg model =
             Cmd.batch [save "True", postVote id])
 
 -- VIEW
-
+alreadyVotedText : Bool -> String
 alreadyVotedText alreadyVoted =
   if alreadyVoted then
     "Takk for stemmen!"
   else
     "Stem da mann/kvinne!"
 
+sumOfVotes : List Turban -> Int
+sumOfVotes turbanlist =
+  let
+    getCount turban =
+      turban.count
+  in
+    List.sum (List.map getCount turbanlist)
+
+percentageOfVotes : Int -> Model -> Int
+percentageOfVotes votes model =
+  round ((toFloat votes / toFloat (sumOfVotes model.turbans)) * 100)
+
+myStyle : Int -> Attribute msg
+myStyle width =
+  style
+    [ ("backgroundColor", "green")
+    , ("height", "1.5em")
+    , ("margin", "0.2em 1em")
+    , ("width", (toString width) ++ "%")
+    ]
+
 view : Model -> Html Msg
 view model =
   div [class "container"]
-    [ section [] (List.map viewTurban model.turbans)
+    [ section [] (List.map (\turban -> article []
+      [ img [src "https://scontent-arn2-1.xx.fbcdn.net/v/t1.0-9/17457714_10154631752074514_1853965134717809529_n.jpg?oh=d8229e93432033b6b90f4a25f13b5d72&oe=594FCF0F"] []
+      , div [class "name"] [ text turban.name ]
+      , div [] [ text ("Antall stemmer: " ++ (toString turban.count)) ]
+      , div [] [ text (((toString (percentageOfVotes turban.count model))) ++ "% av stemmene") ]
+      
+      , button [onClick (Vote turban.id)] [text "STEM"]
+      ])  model.turbans)
     , text (alreadyVotedText model.alreadyVoted)]
-
-viewTurban : Turban -> Html Msg
-viewTurban turban =
-  article []
-    [ img [src "https://scontent-arn2-1.xx.fbcdn.net/v/t1.0-9/17457714_10154631752074514_1853965134717809529_n.jpg?oh=d8229e93432033b6b90f4a25f13b5d72&oe=594FCF0F"] []
-    , div [class "name"] [ text turban.name ]
-    , div [] [ text ("Antall stemmer: " ++ (toString turban.count)) ]
-    , div [] [ text ((toString turban.count)) ]
-    , button [onClick (Vote turban.id)] [text "STEM"]
-    ]
