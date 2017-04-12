@@ -80,11 +80,11 @@ button {
   border: 1px solid blue;
   transition: all .2s ease-in-out;
   outline: none;
-  margin: 1em 0 0 0;
+  margin: 1em 0 2em 0;
 }
 
 button:hover {
-  transform: scale(1.03);
+  transform: scale(1);
   border: 1px solid blue;
   color: white;
   background-color: blue;
@@ -92,23 +92,31 @@ button:hover {
 }
 
 button.inactive {
-  background-color: grey;
+  transition: all .2s ease-in-out;
+  background-color: white;
+  color: blue;
+}
+
+button.voted{
+  background-color: blue;
+  color: white;
 }
 
 button.inactive:hover {
-  background-color: black;
+
   transform: none;
   text: none;
   cursor: default;
+  line-height: 1.7em;
 }
 
 button.inactive:hover::after
 {
-
+  color: blue;
   content: "Du har allerede stemt";
   display: block;
-
-/* New content takes up original line height */}
+  line-height: 3em;
+  }
 
 @media (max-width: 965px) {
   article:first-child {

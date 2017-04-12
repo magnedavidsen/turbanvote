@@ -9603,6 +9603,14 @@ var _magnedavidsen$hmm$Main$myStyle = function (width) {
 			}
 		});
 };
+var _magnedavidsen$hmm$Main$buttonText = F2(
+	function (model, turbanid) {
+		return _elm_lang$core$Native_Utils.eq(model.alreadyVoted, turbanid) ? 'TAKK 😘' : 'STEM';
+	});
+var _magnedavidsen$hmm$Main$buttonClass = F2(
+	function (model, turbanid) {
+		return ((!_elm_lang$core$String$isEmpty(model.alreadyVoted)) && _elm_lang$core$Native_Utils.eq(model.alreadyVoted, turbanid)) ? 'inactive voted' : ((!_elm_lang$core$String$isEmpty(model.alreadyVoted)) ? 'inactive' : '');
+	});
 var _magnedavidsen$hmm$Main$sumOfVotes = function (turbanlist) {
 	var getCount = function (turban) {
 		return turban.count;
@@ -9617,7 +9625,7 @@ var _magnedavidsen$hmm$Main$percentageOfVotes = F2(
 				_magnedavidsen$hmm$Main$sumOfVotes(model.turbans))) * 100);
 	});
 var _magnedavidsen$hmm$Main$alreadyVotedText = function (alreadyVoted) {
-	return alreadyVoted ? 'Takk for stemmen!' : 'Stem da mann/kvinne!';
+	return (!_elm_lang$core$String$isEmpty(alreadyVoted)) ? 'Takk for stemmen!' : 'Stem da mann/kvinne!';
 };
 var _magnedavidsen$hmm$Main$counterEndpoint = 'wss://turbanvote.herokuapp.com/counter';
 var _magnedavidsen$hmm$Main$postVote = function (id) {
@@ -9666,17 +9674,33 @@ var _magnedavidsen$hmm$Main$decodeTurbans = function (payload) {
 		return {ctor: '[]'};
 	}
 };
+var _magnedavidsen$hmm$Main$diff = F2(
+	function (oldTurbans, newTurbans) {
+		return A3(
+			_elm_lang$core$List$map2,
+			F2(
+				function (oldTurban, newTurban) {
+					return A3(_magnedavidsen$hmm$Main$Turban, oldTurban.id, newTurban.count - oldTurban.count, oldTurban.name);
+				}),
+			oldTurbans,
+			newTurbans);
+	});
 var _magnedavidsen$hmm$Main$update = F2(
 	function (msg, model) {
 		var _p1 = msg;
 		switch (_p1.ctor) {
 			case 'ReceiveTurbans':
+				var _p2 = _p1._0;
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
 						{
-							turbans: _magnedavidsen$hmm$Main$decodeTurbans(_p1._0)
+							turbans: _magnedavidsen$hmm$Main$decodeTurbans(_p2),
+							diffTurbans: A2(
+								_magnedavidsen$hmm$Main$diff,
+								model.turbans,
+								_magnedavidsen$hmm$Main$decodeTurbans(_p2))
 						}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
@@ -9688,15 +9712,13 @@ var _magnedavidsen$hmm$Main$update = F2(
 						{ctor: '_Tuple0'})
 				};
 			case 'Load':
-				var _p2 = _p1._0;
-				if (_p2.ctor === 'Just') {
+				var _p3 = _p1._0;
+				if (_p3.ctor === 'Just') {
 					return {
 						ctor: '_Tuple2',
 						_0: _elm_lang$core$Native_Utils.update(
 							model,
-							{
-								alreadyVoted: !_elm_lang$core$String$isEmpty(_p2._0)
-							}),
+							{alreadyVoted: _p3._0}),
 						_1: _elm_lang$core$Platform_Cmd$none
 					};
 				} else {
@@ -9704,48 +9726,53 @@ var _magnedavidsen$hmm$Main$update = F2(
 						ctor: '_Tuple2',
 						_0: _elm_lang$core$Native_Utils.update(
 							model,
-							{alreadyVoted: false}),
+							{alreadyVoted: ''}),
 						_1: _elm_lang$core$Platform_Cmd$none
 					};
 				}
 			default:
-				var _p3 = _p1._0;
-				var updateVote = function (t) {
-					return _elm_lang$core$Native_Utils.eq(t.id, _p3) ? _elm_lang$core$Native_Utils.update(
-						t,
-						{count: t.count + 1}) : t;
-				};
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						model,
-						{
-							turbans: A2(_elm_lang$core$List$map, updateVote, model.turbans),
-							alreadyVoted: true
-						}),
-					_1: _elm_lang$core$Platform_Cmd$batch(
-						{
-							ctor: '::',
-							_0: _magnedavidsen$hmm$Main$save('True'),
-							_1: {
+				var _p4 = _p1._0;
+				if (!_elm_lang$core$String$isEmpty(model.alreadyVoted)) {
+					return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+				} else {
+					var updateVote = function (t) {
+						return _elm_lang$core$Native_Utils.eq(t.id, _p4) ? _elm_lang$core$Native_Utils.update(
+							t,
+							{count: t.count + 1}) : t;
+					};
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							model,
+							{
+								turbans: A2(_elm_lang$core$List$map, updateVote, model.turbans),
+								alreadyVoted: _p4
+							}),
+						_1: _elm_lang$core$Platform_Cmd$batch(
+							{
 								ctor: '::',
-								_0: _magnedavidsen$hmm$Main$postVote(_p3),
-								_1: {ctor: '[]'}
-							}
-						})
-				};
+								_0: _magnedavidsen$hmm$Main$save(_p4),
+								_1: {
+									ctor: '::',
+									_0: _magnedavidsen$hmm$Main$postVote(_p4),
+									_1: {ctor: '[]'}
+								}
+							})
+					};
+				}
 		}
 	});
-var _magnedavidsen$hmm$Main$Model = F2(
-	function (a, b) {
-		return {turbans: a, alreadyVoted: b};
+var _magnedavidsen$hmm$Main$Model = F3(
+	function (a, b, c) {
+		return {turbans: a, diffTurbans: b, alreadyVoted: c};
 	});
 var _magnedavidsen$hmm$Main$init = {
 	ctor: '_Tuple2',
-	_0: A2(
+	_0: A3(
 		_magnedavidsen$hmm$Main$Model,
 		{ctor: '[]'},
-		false),
+		{ctor: '[]'},
+		''),
 	_1: _magnedavidsen$hmm$Main$doload(
 		{ctor: '_Tuple0'})
 };
@@ -9836,35 +9863,20 @@ var _magnedavidsen$hmm$Main$view = function (model) {
 													ctor: '::',
 													_0: _elm_lang$html$Html_Events$onClick(
 														_magnedavidsen$hmm$Main$Vote(turban.id)),
-													_1: {ctor: '[]'}
+													_1: {
+														ctor: '::',
+														_0: _elm_lang$html$Html_Attributes$class(
+															A2(_magnedavidsen$hmm$Main$buttonClass, model, turban.id)),
+														_1: {ctor: '[]'}
+													}
 												},
 												{
 													ctor: '::',
-													_0: _elm_lang$html$Html$text('STEM'),
+													_0: _elm_lang$html$Html$text(
+														A2(_magnedavidsen$hmm$Main$buttonText, model, turban.id)),
 													_1: {ctor: '[]'}
 												}),
-											_1: {
-												ctor: '::',
-												_0: A2(
-													_elm_lang$html$Html$div,
-													{
-														ctor: '::',
-														_0: _magnedavidsen$hmm$Main$myStyle(
-															A2(_magnedavidsen$hmm$Main$percentageOfVotes, turban.count, model)),
-														_1: {ctor: '[]'}
-													},
-													{
-														ctor: '::',
-														_0: _elm_lang$html$Html$text(
-															A2(
-																_elm_lang$core$Basics_ops['++'],
-																_elm_lang$core$Basics$toString(
-																	A2(_magnedavidsen$hmm$Main$percentageOfVotes, turban.count, model)),
-																'%')),
-														_1: {ctor: '[]'}
-													}),
-												_1: {ctor: '[]'}
-											}
+											_1: {ctor: '[]'}
 										}
 									}
 								}
