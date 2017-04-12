@@ -9576,24 +9576,28 @@ var _magnedavidsen$hmm$Main$myStyle = function (width) {
 	return _elm_lang$html$Html_Attributes$style(
 		{
 			ctor: '::',
-			_0: {ctor: '_Tuple2', _0: 'backgroundColor', _1: 'green'},
+			_0: {ctor: '_Tuple2', _0: 'backgroundColor', _1: 'blue'},
 			_1: {
 				ctor: '::',
-				_0: {ctor: '_Tuple2', _0: 'height', _1: '1.5em'},
+				_0: {ctor: '_Tuple2', _0: 'color', _1: 'white'},
 				_1: {
 					ctor: '::',
-					_0: {ctor: '_Tuple2', _0: 'margin', _1: '0.2em 1em'},
+					_0: {ctor: '_Tuple2', _0: 'height', _1: '1.5em'},
 					_1: {
 						ctor: '::',
-						_0: {
-							ctor: '_Tuple2',
-							_0: 'width',
-							_1: A2(
-								_elm_lang$core$Basics_ops['++'],
-								_elm_lang$core$Basics$toString(width),
-								'%')
-						},
-						_1: {ctor: '[]'}
+						_0: {ctor: '_Tuple2', _0: 'margin', _1: '0.5em 0'},
+						_1: {
+							ctor: '::',
+							_0: {
+								ctor: '_Tuple2',
+								_0: 'width',
+								_1: A2(
+									_elm_lang$core$Basics_ops['++'],
+									_elm_lang$core$Basics$toString(width),
+									'%')
+							},
+							_1: {ctor: '[]'}
+						}
 					}
 				}
 			}
@@ -9814,44 +9818,49 @@ var _magnedavidsen$hmm$Main$view = function (model) {
 										ctor: '::',
 										_0: A2(
 											_elm_lang$html$Html$div,
-											{ctor: '[]'},
 											{
 												ctor: '::',
-												_0: _elm_lang$html$Html$text(
-													A2(
-														_elm_lang$core$Basics_ops['++'],
-														'Antall stemmer: ',
-														_elm_lang$core$Basics$toString(turban.count))),
+												_0: _elm_lang$html$Html_Attributes$class('description'),
+												_1: {ctor: '[]'}
+											},
+											{
+												ctor: '::',
+												_0: _elm_lang$html$Html$text('Litt  tekst om den fine turbanen, og tankene bak. Osv. Sånne ting. Hvorfor den er blå og gul og sånn. Yassss.'),
 												_1: {ctor: '[]'}
 											}),
 										_1: {
 											ctor: '::',
 											_0: A2(
-												_elm_lang$html$Html$div,
-												{ctor: '[]'},
+												_elm_lang$html$Html$button,
 												{
 													ctor: '::',
-													_0: _elm_lang$html$Html$text(
-														A2(
-															_elm_lang$core$Basics_ops['++'],
-															_elm_lang$core$Basics$toString(
-																A2(_magnedavidsen$hmm$Main$percentageOfVotes, turban.count, model)),
-															'% av stemmene')),
+													_0: _elm_lang$html$Html_Events$onClick(
+														_magnedavidsen$hmm$Main$Vote(turban.id)),
+													_1: {ctor: '[]'}
+												},
+												{
+													ctor: '::',
+													_0: _elm_lang$html$Html$text('STEM'),
 													_1: {ctor: '[]'}
 												}),
 											_1: {
 												ctor: '::',
 												_0: A2(
-													_elm_lang$html$Html$button,
+													_elm_lang$html$Html$div,
 													{
 														ctor: '::',
-														_0: _elm_lang$html$Html_Events$onClick(
-															_magnedavidsen$hmm$Main$Vote(turban.id)),
+														_0: _magnedavidsen$hmm$Main$myStyle(
+															A2(_magnedavidsen$hmm$Main$percentageOfVotes, turban.count, model)),
 														_1: {ctor: '[]'}
 													},
 													{
 														ctor: '::',
-														_0: _elm_lang$html$Html$text('STEM'),
+														_0: _elm_lang$html$Html$text(
+															A2(
+																_elm_lang$core$Basics_ops['++'],
+																_elm_lang$core$Basics$toString(
+																	A2(_magnedavidsen$hmm$Main$percentageOfVotes, turban.count, model)),
+																'%')),
 														_1: {ctor: '[]'}
 													}),
 												_1: {ctor: '[]'}

@@ -111,21 +111,23 @@ percentageOfVotes votes model =
 myStyle : Int -> Attribute msg
 myStyle width =
   style
-    [ ("backgroundColor", "green")
+    [ ("backgroundColor", "blue")
+    , ("color", "white")
     , ("height", "1.5em")
-    , ("margin", "0.2em 1em")
+    , ("margin", "0.5em 0")
     , ("width", (toString width) ++ "%")
     ]
 
 view : Model -> Html Msg
 view model =
   div [class "container"]
-    [ section [] (List.map (\turban -> article []
+    [ section []
+      (List.map (\turban -> article []
       [ img [src "https://scontent-arn2-1.xx.fbcdn.net/v/t1.0-9/17457714_10154631752074514_1853965134717809529_n.jpg?oh=d8229e93432033b6b90f4a25f13b5d72&oe=594FCF0F"] []
       , div [class "name"] [ text turban.name ]
-      , div [] [ text ("Antall stemmer: " ++ (toString turban.count)) ]
-      , div [] [ text (((toString (percentageOfVotes turban.count model))) ++ "% av stemmene") ]
-
+      , div [class "description"] [ text "Litt  tekst om den fine turbanen, og tankene bak. Osv. Sånne ting. Hvorfor den er blå og gul og sånn. Yassss." ]
       , button [onClick (Vote turban.id)] [text "STEM"]
+      , div [myStyle (percentageOfVotes turban.count model)] [ text (((toString (percentageOfVotes turban.count model))) ++ "%") ]
       ])  model.turbans)
     , footer [] [text (alreadyVotedText model.alreadyVoted)]]
+    --, div [] [button [class "inactive"] [text "STEM"]]]

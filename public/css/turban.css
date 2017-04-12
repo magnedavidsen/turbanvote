@@ -6,18 +6,32 @@ body {
 }
 
 header {
+  border-bottom: 1px solid blue;
+}
+
+header.top {
   text-align: center;
-  border-bottom: 1px solid black;
-  padding: 2em;
+  padding: 1em;
+  text-decoration: underline;
+}
+
+p {
+  max-width: 53em;
+  font-size: 0.8em;
+  margin: 0em auto;
+  /*border-left: 1px solid blue;
+  border-right: 1px solid blue;*/
+  padding: 2em 1.5em;
+  line-height: 1.5em;
 }
 
 footer {
   padding: 2em;
-  border-top: 1px solid black;
-  border-bottom: 1px solid black;
+  border-top: 1px solid blue;
+  border-bottom: 1px solid blue;
 }
 
-div{
+div {
   text-align: center;
 }
 
@@ -26,16 +40,15 @@ div.container {
 }
 
 div.name {
-  font-size: 1.5em;
+  font-size: 1.3em;
   margin: 0.5em 0 0 0;
   text-decoration: underline;
 }
 
-div.percentageBar {
-  background-color: blue;
-  height: 1em;
-  width: 2em;
-  content: ""
+div.description {
+  padding: 1em 0;
+  font-size: 0.7em;
+  text-align: left;
 }
 
 section {
@@ -48,11 +61,11 @@ article {
   margin: 0 auto;
   padding: 1em;
   min-width: 8em;
-  border-right: 1px solid black;
+  border-right: 1px solid blue;
 }
 
 article:first-child {
-  border-left: 1px solid black;
+  border-left: 1px solid blue;
 }
 
 img {
@@ -62,15 +75,40 @@ img {
 button {
   width: 100%;
   height: 2em;
-  color: #000;
+  color: blue;
   background-color: #fff;
-  border: 1px solid #333;
+  border: 1px solid blue;
   transition: all .2s ease-in-out;
   outline: none;
   margin: 1em 0 0 0;
 }
 
-button:hover { transform: scale(1.1); }
+button:hover {
+  transform: scale(1.03);
+  border: 1px solid blue;
+  color: white;
+  background-color: blue;
+
+}
+
+button.inactive {
+  background-color: grey;
+}
+
+button.inactive:hover {
+  background-color: black;
+  transform: none;
+  text: none;
+  cursor: default;
+}
+
+button.inactive:hover::after
+{
+
+  content: "Du har allerede stemt";
+  display: block;
+
+/* New content takes up original line height */}
 
 @media (max-width: 965px) {
   article:first-child {
@@ -88,7 +126,7 @@ button:hover { transform: scale(1.1); }
   article {
     border-left: none;
     border-right: none;
-    border-bottom: 1px solid black;
+    border-bottom: 1px solid blue;
   }
   footer {
     border: none;
