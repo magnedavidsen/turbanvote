@@ -9627,7 +9627,7 @@ var _magnedavidsen$hmm$Main$percentageOfVotes = F2(
 var _magnedavidsen$hmm$Main$alreadyVotedText = function (alreadyVoted) {
 	return (!_elm_lang$core$String$isEmpty(alreadyVoted)) ? 'Takk for stemmen!' : 'Stem da mann/kvinne!';
 };
-var _magnedavidsen$hmm$Main$counterEndpoint = 'wss://turbanvote.herokuapp.com/counter';
+var _magnedavidsen$hmm$Main$counterEndpoint = 'wss://turbanvote.herokuapp.com/';
 var _magnedavidsen$hmm$Main$postVote = function (id) {
 	return A2(_elm_lang$websocket$WebSocket$send, _magnedavidsen$hmm$Main$counterEndpoint, id);
 };
