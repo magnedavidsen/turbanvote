@@ -5,7 +5,7 @@ body {
   font-weight: 300;
   font-size: 16pt;
   background-color: #090907;
-  color: #eee;
+  color: #fff;
   -webkit-font-smoothing:antialiased;
 }
 
@@ -113,7 +113,7 @@ img {
 }
 
 button {
-
+  border-radius: 3px;
   padding: 1em 2em;
   line-height: 1em;
   color: white;
@@ -127,7 +127,6 @@ button {
 
 button:hover {
   transform: scale(1);
-
   color: black;
   background-color: white;
 
