@@ -98,7 +98,7 @@ update msg model =
             else
               t
             in
-              ({ model | turbans = List.map updateVote model.turbans, alreadyVoted = id },
+              ({ model | alreadyVoted = id },
               Cmd.batch [save id, postVote id])
 
 -- VIEW
@@ -151,7 +151,9 @@ view model =
             , div [class "title"] [ text turban.title ]
             , div [class "name"] [ text turban.name ]
             , button [onClick (Vote turban.id), class (buttonClass model turban.id)] [text (buttonText model turban.id)]
-            , div [class "description"] [ text turban.desc ]
-            , div [class (if (votesSinceLastUpdate model turban.id) > 0 then "likes" else "no-likes")] [text (String.repeat (votesSinceLastUpdate model turban.id) "❤️")]
+            -- , div [class (if (votesSinceLastUpdate model turban.id) > 0 then "likes" else "no-likes")] [text (String.repeat (votesSinceLastUpdate model turban.id) "❤️")]
+            , if (votesSinceLastUpdate model turban.id) > 0 then div [class "likes"] [text "❤️"] else span [class "no-likes"] [text ""]
+            -- , div [class "likes"] [text "❤️"]
+            , div [class "description"] [ text turban.desc]
             ])  model.turbans)
     , footer [] [text (alreadyVotedText model.alreadyVoted)]]

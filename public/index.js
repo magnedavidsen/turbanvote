@@ -9735,10 +9735,7 @@ var _magnedavidsen$hmm$Main$update = F2(
 						ctor: '_Tuple2',
 						_0: _elm_lang$core$Native_Utils.update(
 							model,
-							{
-								turbans: A2(_elm_lang$core$List$map, updateVote, model.turbans),
-								alreadyVoted: _p4
-							}),
+							{alreadyVoted: _p4}),
 						_1: _elm_lang$core$Platform_Cmd$batch(
 							{
 								ctor: '::',
@@ -9878,16 +9875,29 @@ var _magnedavidsen$hmm$Main$view = function (model) {
 												}),
 											_1: {
 												ctor: '::',
-												_0: A2(
+												_0: (_elm_lang$core$Native_Utils.cmp(
+													A2(_magnedavidsen$hmm$Main$votesSinceLastUpdate, model, turban.id),
+													0) > 0) ? A2(
 													_elm_lang$html$Html$div,
 													{
 														ctor: '::',
-														_0: _elm_lang$html$Html_Attributes$class('description'),
+														_0: _elm_lang$html$Html_Attributes$class('likes'),
 														_1: {ctor: '[]'}
 													},
 													{
 														ctor: '::',
-														_0: _elm_lang$html$Html$text(turban.desc),
+														_0: _elm_lang$html$Html$text('❤️'),
+														_1: {ctor: '[]'}
+													}) : A2(
+													_elm_lang$html$Html$span,
+													{
+														ctor: '::',
+														_0: _elm_lang$html$Html_Attributes$class('no-likes'),
+														_1: {ctor: '[]'}
+													},
+													{
+														ctor: '::',
+														_0: _elm_lang$html$Html$text(''),
 														_1: {ctor: '[]'}
 													}),
 												_1: {
@@ -9896,19 +9906,12 @@ var _magnedavidsen$hmm$Main$view = function (model) {
 														_elm_lang$html$Html$div,
 														{
 															ctor: '::',
-															_0: _elm_lang$html$Html_Attributes$class(
-																(_elm_lang$core$Native_Utils.cmp(
-																	A2(_magnedavidsen$hmm$Main$votesSinceLastUpdate, model, turban.id),
-																	0) > 0) ? 'likes' : 'no-likes'),
+															_0: _elm_lang$html$Html_Attributes$class('description'),
 															_1: {ctor: '[]'}
 														},
 														{
 															ctor: '::',
-															_0: _elm_lang$html$Html$text(
-																A2(
-																	_elm_lang$core$String$repeat,
-																	A2(_magnedavidsen$hmm$Main$votesSinceLastUpdate, model, turban.id),
-																	'❤️')),
+															_0: _elm_lang$html$Html$text(turban.desc),
 															_1: {ctor: '[]'}
 														}),
 													_1: {ctor: '[]'}

@@ -64,19 +64,25 @@ div.description {
 }
 
 div.likes {
-  margin: 0 0 1em 0;
+  margin: 6em 0 1em 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  transition: all 0.5s ease;
-  opacity: 1;
-  animation: fadeOut 0.5s;
-  animation-delay: 1s;
+  animation: fadeOut 3s;
+  animation-delay: 0s;
+  animation-iteration-count: 1;
+  animation-play-state: running;
+  position: absolute;
+  top: 0;
+  text-align: center;
+  width: 100%;
+  opacity: 0;
+
 }
 
 @keyframes fadeOut {
-    from {opacity: 1;}
-    to {opacity: 0;}
+    from {opacity: 1; transform: scale(3);}
+    to {opacity: 0; transform: scale(5) translateY(-2em);}
 }
 
 @keyframes fadeIn {
@@ -99,8 +105,7 @@ section {
 article {
   margin: 0 auto;
   flex-basis: 33.333333333%;
-
-
+  position: relative;
 }
 
 article:first-child {
