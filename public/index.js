@@ -9606,7 +9606,7 @@ var _magnedavidsen$hmm$Main$buttonClass = F2(
 		return ((!_elm_lang$core$String$isEmpty(model.alreadyVoted)) && _elm_lang$core$Native_Utils.eq(model.alreadyVoted, turbanid)) ? 'inactive voted' : ((!_elm_lang$core$String$isEmpty(model.alreadyVoted)) ? 'inactive' : '');
 	});
 var _magnedavidsen$hmm$Main$alreadyVotedText = function (alreadyVoted) {
-	return (!_elm_lang$core$String$isEmpty(alreadyVoted)) ? 'Takk for stemmen!' : 'Stem da mann/kvinne!';
+	return (!_elm_lang$core$String$isEmpty(alreadyVoted)) ? 'Takk for stemmen!' : 'Stem da, mann/kvinne!';
 };
 var _magnedavidsen$hmm$Main$counterEndpoint = 'wss://www.osloturban.no/';
 var _magnedavidsen$hmm$Main$postVote = function (id) {
@@ -9813,17 +9813,51 @@ var _magnedavidsen$hmm$Main$view = function (model) {
 							{
 								ctor: '::',
 								_0: A2(
-									_elm_lang$html$Html$img,
+									_elm_lang$html$Html$div,
 									{
 										ctor: '::',
-										_0: _elm_lang$html$Html_Attributes$src(
-											A2(
-												_elm_lang$core$Basics_ops['++'],
-												'turban_',
-												A2(_elm_lang$core$Basics_ops['++'], turban.id, '_front.jpg'))),
+										_0: _elm_lang$html$Html_Attributes$class('images'),
 										_1: {ctor: '[]'}
 									},
-									{ctor: '[]'}),
+									{
+										ctor: '::',
+										_0: A2(
+											_elm_lang$html$Html$img,
+											{
+												ctor: '::',
+												_0: _elm_lang$html$Html_Attributes$class('bottom'),
+												_1: {
+													ctor: '::',
+													_0: _elm_lang$html$Html_Attributes$src(
+														A2(
+															_elm_lang$core$Basics_ops['++'],
+															'turban_',
+															A2(_elm_lang$core$Basics_ops['++'], turban.id, '_bottom.jpg'))),
+													_1: {ctor: '[]'}
+												}
+											},
+											{ctor: '[]'}),
+										_1: {
+											ctor: '::',
+											_0: A2(
+												_elm_lang$html$Html$img,
+												{
+													ctor: '::',
+													_0: _elm_lang$html$Html_Attributes$class('top'),
+													_1: {
+														ctor: '::',
+														_0: _elm_lang$html$Html_Attributes$src(
+															A2(
+																_elm_lang$core$Basics_ops['++'],
+																'turban_',
+																A2(_elm_lang$core$Basics_ops['++'], turban.id, '_top.jpg'))),
+														_1: {ctor: '[]'}
+													}
+												},
+												{ctor: '[]'}),
+											_1: {ctor: '[]'}
+										}
+									}),
 								_1: {
 									ctor: '::',
 									_0: A2(

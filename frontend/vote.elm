@@ -107,7 +107,7 @@ alreadyVotedText alreadyVoted =
   if not (String.isEmpty alreadyVoted) then
     "Takk for stemmen!"
   else
-    "Stem da mann/kvinne!"
+    "Stem da, mann/kvinne!"
 
 buttonClass : Model ->  String -> String
 buttonClass model turbanid =
@@ -147,7 +147,9 @@ view model =
       (List.map (\turban ->
         let mouseover = False in
           article []
-            [ img [src ("turban_" ++ turban.id ++ "_front.jpg") ] []
+            [ div [class "images"]
+                [img [class "bottom", src ("turban_" ++ turban.id ++ "_bottom.jpg") ] []
+                , img [class "top",src ("turban_" ++ turban.id ++ "_top.jpg") ] []]
             , div [class "title"] [ text turban.title ]
             , div [class "name"] [ text turban.name ]
             , button [onClick (Vote turban.id), class (buttonClass model turban.id)] [text (buttonText model turban.id)]
