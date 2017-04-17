@@ -1,0 +1,190 @@
+@import "normalize.less";
+@import "main.less";
+@import "prefixer.less";
+
+
+body {
+  height: 100%;
+  width: 100%;
+  font-family: 'Work Sans', 'Palanquin Dark', sans-serif;
+  font-weight: 300;
+  font-size: 16pt;
+  background-color: #090907;
+  color: #fff;
+  -webkit-font-smoothing:antialiased;
+}
+
+
+header.top {
+  text-align: center;
+  padding: 2em;
+  font-family: 'Playfair Display', sans-serif;
+  margin: 1em;
+}
+
+header.bread {
+  margin: 1em;
+}
+
+p {
+  max-width: 53em;
+  font-size: 0.8em;
+  margin: 0.8em auto;
+  line-height: 1.5em;
+}
+
+footer {
+  padding: 2em;
+  margin-bottom: 2em;
+
+}
+
+div {
+  text-align: center;
+}
+
+div.container {
+  margin: 0 auto;
+}
+
+div.title {
+  font-size: 1.3em;
+  margin: 1em 0 0 0;
+  font-family: 'Playfair Display', sans-serif;
+  font-style: italic;
+}
+
+div.name {
+  font-size: 0.3m;
+  margin: 0;
+}
+
+div.description {
+  padding: 1.5em;
+  font-size: 0.8em;
+  text-align: left;
+  line-height: 1.5em;
+  text-align: center;
+  hyphens: auto;
+  margin-bottom: 2em;
+}
+
+div.likes {
+  margin: 6em 0 1em 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  .animation(fadeOut 3s);
+  .animation-delay(0s);
+  .animation-iteration-count(1);
+  .animation-play-state(running);
+  position: absolute;
+  top: 0;
+  text-align: center;
+  width: 100%;
+  opacity: 0;
+}
+
+@keyframes fadeOut {
+    from {opacity: 1; .transform(scale(3));}
+    to {opacity: 0; .transform(scale(5) translateY(-2em));}
+}
+
+@keyframes fadeIn {
+    from {opacity: 1;}
+    to {opacity: 0;}
+}
+
+section {
+  margin: 3em auto;
+  max-width: 55em;
+  display: flex;
+}
+
+article {
+  margin: 0 auto;
+  flex-basis: 33.333333333%;
+  position: relative;
+}
+
+img {
+  width: 100%;
+
+}
+
+div.images {
+  position:relative;
+}
+
+img.top {
+  position:absolute;
+  left:0;
+}
+
+img {
+  .transition(opacity 0.5s ease-in-out);
+}
+
+img.top:hover {
+  opacity:0;
+}
+
+button {
+  .border-radius(3px);
+  padding: 1em 2em;
+  line-height: 1em;
+  color: white;
+  background-color: #111;
+  border: 1px solid white;
+  .transition(all .2s ease-in-out);
+  outline: none;
+  margin: 2em 0 2em 0;
+  font-family: 'Palanquin Dark', sans-serif;
+}
+
+button:hover {
+  color: black;
+  background-color: white;
+
+}
+
+button.inactive {
+  transition: all .2s ease-in-out;
+  background-color: #343434;
+  border-color: #343434;
+  color: #c9c9c9;
+}
+
+button.voted.inactive{
+  background-color: white;
+  color: black;
+}
+
+
+button.inactive:hover {
+  cursor: default;
+}
+
+
+@media (max-width: 965px) {
+
+}
+
+@media (max-width: 749px) {
+
+  header {
+    margin: 2em;
+  }
+
+  section {
+    margin: 1em;
+    flex-wrap: wrap;
+  }
+  article {
+    flex-basis: auto;
+
+  }
+  footer {
+
+  }
+}
