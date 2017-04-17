@@ -9572,62 +9572,43 @@ var _elm_lang$websocket$WebSocket$onSelfMsg = F3(
 	});
 _elm_lang$core$Native_Platform.effectManagers['WebSocket'] = {pkg: 'elm-lang/websocket', init: _elm_lang$websocket$WebSocket$init, onEffects: _elm_lang$websocket$WebSocket$onEffects, onSelfMsg: _elm_lang$websocket$WebSocket$onSelfMsg, tag: 'fx', cmdMap: _elm_lang$websocket$WebSocket$cmdMap, subMap: _elm_lang$websocket$WebSocket$subMap};
 
-var _magnedavidsen$hmm$Main$myStyle = function (width) {
-	return _elm_lang$html$Html_Attributes$style(
-		{
-			ctor: '::',
-			_0: {ctor: '_Tuple2', _0: 'backgroundColor', _1: 'blue'},
-			_1: {
-				ctor: '::',
-				_0: {ctor: '_Tuple2', _0: 'color', _1: 'white'},
-				_1: {
-					ctor: '::',
-					_0: {ctor: '_Tuple2', _0: 'height', _1: '1.5em'},
-					_1: {
-						ctor: '::',
-						_0: {ctor: '_Tuple2', _0: 'margin', _1: '0.5em 0'},
-						_1: {
-							ctor: '::',
-							_0: {
-								ctor: '_Tuple2',
-								_0: 'width',
-								_1: A2(
-									_elm_lang$core$Basics_ops['++'],
-									_elm_lang$core$Basics$toString(width),
-									'%')
-							},
-							_1: {ctor: '[]'}
-						}
-					}
-				}
-			}
-		});
-};
+var _magnedavidsen$hmm$Main$imageSource = F2(
+	function (turbanid, mouseover) {
+		return mouseover ? A2(
+			_elm_lang$core$Basics_ops['++'],
+			'turban_',
+			A2(_elm_lang$core$Basics_ops['++'], turbanid, '_back.jpg')) : A2(
+			_elm_lang$core$Basics_ops['++'],
+			'turban_',
+			A2(_elm_lang$core$Basics_ops['++'], turbanid, '_front.jpg'));
+	});
+var _magnedavidsen$hmm$Main$votesSinceLastUpdate = F2(
+	function (model, turbanid) {
+		return _elm_lang$core$List$sum(
+			A2(
+				_elm_lang$core$List$map,
+				function (turban) {
+					return turban.count;
+				},
+				A2(
+					_elm_lang$core$List$filter,
+					function (turbanDiff) {
+						return _elm_lang$core$Native_Utils.eq(turbanDiff.id, turbanid);
+					},
+					model.diffTurbans)));
+	});
 var _magnedavidsen$hmm$Main$buttonText = F2(
 	function (model, turbanid) {
-		return _elm_lang$core$Native_Utils.eq(model.alreadyVoted, turbanid) ? 'TAKK 😘' : 'STEM';
+		return _elm_lang$core$String$isEmpty(model.alreadyVoted) ? 'Stem' : (_elm_lang$core$Native_Utils.eq(model.alreadyVoted, turbanid) ? 'Takk 😘' : 'Du har stemt 😏');
 	});
 var _magnedavidsen$hmm$Main$buttonClass = F2(
 	function (model, turbanid) {
 		return ((!_elm_lang$core$String$isEmpty(model.alreadyVoted)) && _elm_lang$core$Native_Utils.eq(model.alreadyVoted, turbanid)) ? 'inactive voted' : ((!_elm_lang$core$String$isEmpty(model.alreadyVoted)) ? 'inactive' : '');
 	});
-var _magnedavidsen$hmm$Main$sumOfVotes = function (turbanlist) {
-	var getCount = function (turban) {
-		return turban.count;
-	};
-	return _elm_lang$core$List$sum(
-		A2(_elm_lang$core$List$map, getCount, turbanlist));
-};
-var _magnedavidsen$hmm$Main$percentageOfVotes = F2(
-	function (votes, model) {
-		return _elm_lang$core$Basics$round(
-			(_elm_lang$core$Basics$toFloat(votes) / _elm_lang$core$Basics$toFloat(
-				_magnedavidsen$hmm$Main$sumOfVotes(model.turbans))) * 100);
-	});
 var _magnedavidsen$hmm$Main$alreadyVotedText = function (alreadyVoted) {
 	return (!_elm_lang$core$String$isEmpty(alreadyVoted)) ? 'Takk for stemmen!' : 'Stem da mann/kvinne!';
 };
-var _magnedavidsen$hmm$Main$counterEndpoint = 'wss://turbanvote.herokuapp.com/';
+var _magnedavidsen$hmm$Main$counterEndpoint = 'wss://www.osloturban.no/';
 var _magnedavidsen$hmm$Main$postVote = function (id) {
 	return A2(_elm_lang$websocket$WebSocket$send, _magnedavidsen$hmm$Main$counterEndpoint, id);
 };
@@ -9653,16 +9634,18 @@ var _magnedavidsen$hmm$Main$doload = _elm_lang$core$Native_Platform.outgoingPort
 	function (v) {
 		return null;
 	});
-var _magnedavidsen$hmm$Main$Turban = F3(
-	function (a, b, c) {
-		return {id: a, count: b, name: c};
+var _magnedavidsen$hmm$Main$Turban = F5(
+	function (a, b, c, d, e) {
+		return {id: a, count: b, name: c, title: d, desc: e};
 	});
-var _magnedavidsen$hmm$Main$turbanDecoder = A4(
-	_elm_lang$core$Json_Decode$map3,
+var _magnedavidsen$hmm$Main$turbanDecoder = A6(
+	_elm_lang$core$Json_Decode$map5,
 	_magnedavidsen$hmm$Main$Turban,
 	A2(_elm_lang$core$Json_Decode$field, 'id', _elm_lang$core$Json_Decode$string),
 	A2(_elm_lang$core$Json_Decode$field, 'count', _elm_lang$core$Json_Decode$int),
-	A2(_elm_lang$core$Json_Decode$field, 'name', _elm_lang$core$Json_Decode$string));
+	A2(_elm_lang$core$Json_Decode$field, 'name', _elm_lang$core$Json_Decode$string),
+	A2(_elm_lang$core$Json_Decode$field, 'title', _elm_lang$core$Json_Decode$string),
+	A2(_elm_lang$core$Json_Decode$field, 'desc', _elm_lang$core$Json_Decode$string));
 var _magnedavidsen$hmm$Main$decodeTurbans = function (payload) {
 	var _p0 = A2(
 		_elm_lang$core$Json_Decode$decodeString,
@@ -9680,7 +9663,7 @@ var _magnedavidsen$hmm$Main$diff = F2(
 			_elm_lang$core$List$map2,
 			F2(
 				function (oldTurban, newTurban) {
-					return A3(_magnedavidsen$hmm$Main$Turban, oldTurban.id, newTurban.count - oldTurban.count, oldTurban.name);
+					return A5(_magnedavidsen$hmm$Main$Turban, oldTurban.id, newTurban.count - oldTurban.count, oldTurban.name, oldTurban.title, oldTurban.desc);
 				}),
 			oldTurbans,
 			newTurbans);
@@ -9730,6 +9713,14 @@ var _magnedavidsen$hmm$Main$update = F2(
 						_1: _elm_lang$core$Platform_Cmd$none
 					};
 				}
+			case 'MouseOverImage':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{mouseOver: _p1._0}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
 			default:
 				var _p4 = _p1._0;
 				if (!_elm_lang$core$String$isEmpty(model.alreadyVoted)) {
@@ -9762,19 +9753,23 @@ var _magnedavidsen$hmm$Main$update = F2(
 				}
 		}
 	});
-var _magnedavidsen$hmm$Main$Model = F3(
-	function (a, b, c) {
-		return {turbans: a, diffTurbans: b, alreadyVoted: c};
+var _magnedavidsen$hmm$Main$Model = F4(
+	function (a, b, c, d) {
+		return {turbans: a, diffTurbans: b, alreadyVoted: c, mouseOver: d};
 	});
 var _magnedavidsen$hmm$Main$init = {
 	ctor: '_Tuple2',
-	_0: A3(
+	_0: A4(
 		_magnedavidsen$hmm$Main$Model,
 		{ctor: '[]'},
 		{ctor: '[]'},
+		'',
 		''),
 	_1: _magnedavidsen$hmm$Main$doload(
 		{ctor: '_Tuple0'})
+};
+var _magnedavidsen$hmm$Main$MouseOverImage = function (a) {
+	return {ctor: 'MouseOverImage', _0: a};
 };
 var _magnedavidsen$hmm$Main$Load = function (a) {
 	return {ctor: 'Load', _0: a};
@@ -9814,6 +9809,7 @@ var _magnedavidsen$hmm$Main$view = function (model) {
 				A2(
 					_elm_lang$core$List$map,
 					function (turban) {
+						var mouseover = false;
 						return A2(
 							_elm_lang$html$Html$article,
 							{ctor: '[]'},
@@ -9823,7 +9819,11 @@ var _magnedavidsen$hmm$Main$view = function (model) {
 									_elm_lang$html$Html$img,
 									{
 										ctor: '::',
-										_0: _elm_lang$html$Html_Attributes$src('https://scontent-arn2-1.xx.fbcdn.net/v/t1.0-9/17457714_10154631752074514_1853965134717809529_n.jpg?oh=d8229e93432033b6b90f4a25f13b5d72&oe=594FCF0F'),
+										_0: _elm_lang$html$Html_Attributes$src(
+											A2(
+												_elm_lang$core$Basics_ops['++'],
+												'turban_',
+												A2(_elm_lang$core$Basics_ops['++'], turban.id, '_front.jpg'))),
 										_1: {ctor: '[]'}
 									},
 									{ctor: '[]'}),
@@ -9833,12 +9833,12 @@ var _magnedavidsen$hmm$Main$view = function (model) {
 										_elm_lang$html$Html$div,
 										{
 											ctor: '::',
-											_0: _elm_lang$html$Html_Attributes$class('name'),
+											_0: _elm_lang$html$Html_Attributes$class('title'),
 											_1: {ctor: '[]'}
 										},
 										{
 											ctor: '::',
-											_0: _elm_lang$html$Html$text(turban.name),
+											_0: _elm_lang$html$Html$text(turban.title),
 											_1: {ctor: '[]'}
 										}),
 									_1: {
@@ -9847,12 +9847,12 @@ var _magnedavidsen$hmm$Main$view = function (model) {
 											_elm_lang$html$Html$div,
 											{
 												ctor: '::',
-												_0: _elm_lang$html$Html_Attributes$class('description'),
+												_0: _elm_lang$html$Html_Attributes$class('name'),
 												_1: {ctor: '[]'}
 											},
 											{
 												ctor: '::',
-												_0: _elm_lang$html$Html$text('Litt  tekst om den fine turbanen, og tankene bak. Osv. Sånne ting. Hvorfor den er blå og gul og sånn. Yassss.'),
+												_0: _elm_lang$html$Html$text(turban.name),
 												_1: {ctor: '[]'}
 											}),
 										_1: {
@@ -9876,7 +9876,44 @@ var _magnedavidsen$hmm$Main$view = function (model) {
 														A2(_magnedavidsen$hmm$Main$buttonText, model, turban.id)),
 													_1: {ctor: '[]'}
 												}),
-											_1: {ctor: '[]'}
+											_1: {
+												ctor: '::',
+												_0: A2(
+													_elm_lang$html$Html$div,
+													{
+														ctor: '::',
+														_0: _elm_lang$html$Html_Attributes$class('description'),
+														_1: {ctor: '[]'}
+													},
+													{
+														ctor: '::',
+														_0: _elm_lang$html$Html$text(turban.desc),
+														_1: {ctor: '[]'}
+													}),
+												_1: {
+													ctor: '::',
+													_0: A2(
+														_elm_lang$html$Html$div,
+														{
+															ctor: '::',
+															_0: _elm_lang$html$Html_Attributes$class(
+																(_elm_lang$core$Native_Utils.cmp(
+																	A2(_magnedavidsen$hmm$Main$votesSinceLastUpdate, model, turban.id),
+																	0) > 0) ? 'likes' : 'no-likes'),
+															_1: {ctor: '[]'}
+														},
+														{
+															ctor: '::',
+															_0: _elm_lang$html$Html$text(
+																A2(
+																	_elm_lang$core$String$repeat,
+																	A2(_magnedavidsen$hmm$Main$votesSinceLastUpdate, model, turban.id),
+																	'❤️')),
+															_1: {ctor: '[]'}
+														}),
+													_1: {ctor: '[]'}
+												}
+											}
 										}
 									}
 								}

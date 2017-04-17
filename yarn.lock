@@ -73,12 +73,6 @@ etag@~1.8.0:
   version "1.8.0"
   resolved "https://registry.yarnpkg.com/etag/-/etag-1.8.0.tgz#6f631aef336d6c46362b51764044ce216be3c051"
 
-express-ws@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/express-ws/-/express-ws-3.0.0.tgz#7ddaaf3b7c758865c099905989911b6234477dbd"
-  dependencies:
-    ws "^2.0.0"
-
 express@^4.15.2:
   version "4.15.2"
   resolved "https://registry.yarnpkg.com/express/-/express-4.15.2.tgz#af107fc148504457f2dca9a6f2571d7129b97b35"
@@ -135,6 +129,12 @@ fresh@0.5.0:
 generic-pool@2.4.3:
   version "2.4.3"
   resolved "https://registry.yarnpkg.com/generic-pool/-/generic-pool-2.4.3.tgz#780c36f69dfad05a5a045dd37be7adca11a4f6ff"
+
+heroku-ssl-redirect@^0.0.3:
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/heroku-ssl-redirect/-/heroku-ssl-redirect-0.0.3.tgz#2f9f02696594251e2a1ad01f9a5d5e2cb9fdab24"
+  dependencies:
+    underscore "^1.7.0"
 
 http-errors@~1.6.1:
   version "1.6.1"
@@ -345,6 +345,10 @@ ultron@~1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/ultron/-/ultron-1.1.0.tgz#b07a2e6a541a815fc6a34ccd4533baec307ca864"
 
+underscore@^1.7.0:
+  version "1.8.3"
+  resolved "https://registry.yarnpkg.com/underscore/-/underscore-1.8.3.tgz#4f3fb53b106e6097fcf9cb4109f2a5e9bdfa5022"
+
 unpipe@~1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/unpipe/-/unpipe-1.0.0.tgz#b2bf4ee8514aae6165b4817829d21b2ef49904ec"
@@ -356,12 +360,6 @@ utils-merge@1.0.0:
 vary@~1.1.0:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/vary/-/vary-1.1.1.tgz#67535ebb694c1d52257457984665323f587e8d37"
-
-ws@^2.0.0:
-  version "2.2.2"
-  resolved "https://registry.yarnpkg.com/ws/-/ws-2.2.2.tgz#aa26daf39c52b20ed716e3447f8641494a726b01"
-  dependencies:
-    ultron "~1.1.0"
 
 ws@^2.2.3:
   version "2.2.3"

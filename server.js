@@ -1,6 +1,7 @@
 'use strict';
 
 const express = require('express');
+const sslRedirect = require('heroku-ssl-redirect');
 const SocketServer = require('ws').Server;
 
 const pool = require('./db');
@@ -9,9 +10,10 @@ const PORT = process.env.PORT || 3000;
 let turbans = [];
 
 const server = express()
+    .use(sslRedirect())
     .use(express.static('public'))
     .listen(PORT, () => {
-        pool.query('select turbans.id, turbans.name, count(*)::int from turbans left join votes on votes.turban = turbans.id group by turbans.id')
+        pool.query('select turbans.id, turbans.name, count(*)::int, turbans.desc, turbans.title from turbans left join votes on votes.turban = turbans.id group by turbans.id')
         .then((res) => turbans = res.rows);
         console.log(`Listening on ${ PORT }`)
     }
@@ -37,4 +39,4 @@ setInterval(() => {
     wss.clients.forEach((client) => {
       client.send(JSON.stringify(turbans));
     });
-}, 1000);
+}, 2000);

@@ -6,11 +6,11 @@ import Html.Attributes exposing (..)
 import WebSocket
 
 import Http
-import Json.Decode exposing (Decoder, int, string, map3 , field, decodeString, list, decodeValue)
+import Json.Decode exposing (Decoder, int, string, map5, field, decodeString, list, decodeValue)
 
 counterEndpoint : String
 counterEndpoint =
-  "wss://turbanvote.herokuapp.com/counter"
+  "wss://www.osloturban.no/"
 
 main =
   Html.program
@@ -32,20 +32,24 @@ type alias Turban =
     { id : String
     , count : Int
     , name : String
+    , title : String
+    , desc : String
     }
 
-type alias Model = { turbans : List Turban, diffTurbans : List Turban, alreadyVoted : String }
+type alias Model = { turbans : List Turban, diffTurbans : List Turban, alreadyVoted : String, mouseOver : String }
 
 init : (Model, Cmd Msg)
 init =
-  (Model [] [] "", doload())
+  (Model [] [] "" "", doload())
 
 turbanDecoder : Decoder Turban
 turbanDecoder =
-    map3 Turban
+    map5 Turban
       (field "id" string)
       (field "count" int)
       (field "name" string)
+      (field "title" string)
+      (field "desc" string)
 
 decodeTurbans : String -> List Turban
 decodeTurbans payload =
@@ -55,7 +59,7 @@ decodeTurbans payload =
 
 diff : List Turban -> List Turban -> List Turban
 diff oldTurbans newTurbans =
-  List.map2 (\oldTurban -> \newTurban ->  Turban oldTurban.id (newTurban.count - oldTurban.count) oldTurban.name) oldTurbans newTurbans
+  List.map2 (\oldTurban -> \newTurban ->  Turban oldTurban.id (newTurban.count - oldTurban.count) oldTurban.name oldTurban.title oldTurban.desc) oldTurbans newTurbans
 
 
 -- UPDATE
@@ -68,7 +72,7 @@ postVote : String -> Cmd Msg
 postVote id =
   WebSocket.send counterEndpoint id
 
-type Msg = Vote String | ReceiveTurbans String | Doload | Load (Maybe String)
+type Msg = Vote String | ReceiveTurbans String | Doload | Load (Maybe String) | MouseOverImage String
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
@@ -81,6 +85,8 @@ update msg model =
       case value of
         Just xs -> ({model | alreadyVoted = xs}, Cmd.none )
         Nothing -> ({model | alreadyVoted = ""}, Cmd.none )
+    MouseOverImage turbanid ->
+      ({model | mouseOver = turbanid}, Cmd.none)
     Vote id ->
       if not (String.isEmpty model.alreadyVoted) then
         (model, Cmd.none)
@@ -103,19 +109,6 @@ alreadyVotedText alreadyVoted =
   else
     "Stem da mann/kvinne!"
 
-sumOfVotes : List Turban -> Int
-sumOfVotes turbanlist =
-  let
-    getCount turban =
-      turban.count
-  in
-    List.sum (List.map getCount turbanlist)
-
-percentageOfVotes : Int -> Model -> Int
-percentageOfVotes votes model =
-  round ((toFloat votes / toFloat (sumOfVotes model.turbans)) * 100)
-
-
 buttonClass : Model ->  String -> String
 buttonClass model turbanid =
   if not (String.isEmpty model.alreadyVoted) && model.alreadyVoted == turbanid then
@@ -127,32 +120,38 @@ buttonClass model turbanid =
 
 buttonText : Model -> String -> String
 buttonText model turbanid =
-  if model.alreadyVoted == turbanid then
-    "TAKK 😘"
+  if String.isEmpty model.alreadyVoted then
+    "Stem"
+  else if model.alreadyVoted == turbanid then
+    "Takk 😘"
   else
-    "STEM"
+    "Du har stemt 😏"
 
-myStyle : Int -> Attribute msg
-myStyle width =
-  style
-    [ ("backgroundColor", "blue")
-    , ("color", "white")
-    , ("height", "1.5em")
-    , ("margin", "0.5em 0")
-    , ("width", (toString width) ++ "%")
-    ]
+votesSinceLastUpdate : Model -> String -> Int
+votesSinceLastUpdate model turbanid =
+  List.sum (List.map (\turban -> turban.count)
+  (List.filter (\turbanDiff -> turbanDiff.id == turbanid) model.diffTurbans))
+
+
+imageSource : String -> Bool -> String
+imageSource turbanid mouseover =
+  if mouseover then
+    "turban_" ++ turbanid ++ "_back.jpg"
+  else
+    "turban_" ++ turbanid ++ "_front.jpg"
 
 view : Model -> Html Msg
 view model =
   div [class "container"]
     [ section []
-      (List.map (\turban -> article []
-      [ img [src "https://scontent-arn2-1.xx.fbcdn.net/v/t1.0-9/17457714_10154631752074514_1853965134717809529_n.jpg?oh=d8229e93432033b6b90f4a25f13b5d72&oe=594FCF0F"] []
-      , div [class "name"] [ text turban.name ]
-      , div [class "description"] [ text "Litt  tekst om den fine turbanen, og tankene bak. Osv. Sånne ting. Hvorfor den er blå og gul og sånn. Yassss." ]
-      , button [onClick (Vote turban.id), class (buttonClass model turban.id)] [text (buttonText model turban.id)]
-      --, div [myStyle (percentageOfVotes turban.count model)] [ text (((toString (percentageOfVotes turban.count model))) ++ "%") ]
-      ])  model.turbans)
-    --, footer [] [text (toString model.diffTurbans) ]
+      (List.map (\turban ->
+        let mouseover = False in
+          article []
+            [ img [src ("turban_" ++ turban.id ++ "_front.jpg") ] []
+            , div [class "title"] [ text turban.title ]
+            , div [class "name"] [ text turban.name ]
+            , button [onClick (Vote turban.id), class (buttonClass model turban.id)] [text (buttonText model turban.id)]
+            , div [class "description"] [ text turban.desc ]
+            , div [class (if (votesSinceLastUpdate model turban.id) > 0 then "likes" else "no-likes")] [text (String.repeat (votesSinceLastUpdate model turban.id) "❤️")]
+            ])  model.turbans)
     , footer [] [text (alreadyVotedText model.alreadyVoted)]]
-    --, div [] [button [class "inactive"] [text "STEM"]]]
